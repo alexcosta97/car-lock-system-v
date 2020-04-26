@@ -18,6 +18,7 @@ namespace Car_Lock_System
 
         private ContainerElement container;
         private Vehicle nearbyCar;
+        private Vehicle currentVehicle;
         private bool locked = false;
         private Ped player = Game.Player.Character;
 
@@ -32,13 +33,9 @@ namespace Car_Lock_System
 
             if (container.Enabled == true)
             {
-                if (e.KeyCode == Keys.L && locked)
+                if (e.KeyCode == Keys.L)
                 {
-                    nearbyCar.LockStatus = VehicleLockStatus.Unlocked;
-                }
-                else if (e.KeyCode == Keys.L && !locked)
-                {
-                    nearbyCar.LockStatus = VehicleLockStatus.Locked;
+                    locker();
                 }
                 container.Items.Clear();
                 container.Enabled = false;
@@ -70,6 +67,25 @@ namespace Car_Lock_System
                     displayText("Press L to Unlock Car");
                     locked = true;
                 }
+            }
+        }
+
+        private void locker()
+        {
+            switch (currentVehicle.LockStatus)
+            {
+                case VehicleLockStatus.Locked:
+                    currentVehicle.LockStatus = VehicleLockStatus.Unlocked;
+                    currentVehicle.IsAlarmSet = false;
+                    break;
+                case VehicleLockStatus.Unlocked:
+                    currentVehicle.LockStatus = VehicleLockStatus.Locked;
+                    currentVehicle.IsAlarmSet = true;
+                    break;
+                default:
+                    currentVehicle.LockStatus = VehicleLockStatus.Unlocked;
+                    currentVehicle.IsAlarmSet = false;
+                    break;
             }
         }
 
