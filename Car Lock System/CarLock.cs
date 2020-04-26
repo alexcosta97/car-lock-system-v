@@ -14,10 +14,12 @@ namespace Car_Lock_System
             KeyUp += OnKeyUp;
             KeyDown += OnKeyDown;
             container = new ContainerElement(new PointF(100.0f, 50.0f), new SizeF(100.0f, 25.0f));
+            Logger.Log("Initialized Script");
         }
 
         private ContainerElement container;
-        private Vehicle currentVehicle;
+        private Vehicle previous;
+        private Vehicle current;
         private bool eligible = false;
         private Ped player = Game.Player.Character;
 
@@ -29,8 +31,8 @@ namespace Car_Lock_System
             }
             else
             {
-                Vehicle nearbyVehicle = World.GetClosestVehicle(player.Position, 5.0f, new Model[0]);
-                eligibilityChecker(nearbyVehicle);
+                Vehicle nearby = World.GetClosestVehicle(player.Position, 5.0f, new Model[0]);
+                eligibilityChecker(nearby);
                 return;
             }
         }
@@ -39,7 +41,7 @@ namespace Car_Lock_System
 
         private void OnKeyUp(object sender, KeyEventArgs e) {
 
-            if (e.KeyCode == Keys.L && eligible && currentVehicle != null)
+            if (e.KeyCode == Keys.L && eligible && current != null)
             {
                 locker();
             }
@@ -47,17 +49,22 @@ namespace Car_Lock_System
             container.Enabled = false;
         }
 
-        private void eligibilityChecker(Vehicle nearbyVehicle)
+        private void eligibilityChecker(Vehicle nearby)
         {
-            Vehicle lastVehicle = player.LastVehicle;
-            if (nearbyVehicle != null && lastVehicle != null && player.LastVehicle.Equals(nearbyVehicle))
+            Vehicle last = player.LastVehicle;
+            if (nearby != null && last != null && last.Equals(nearby))
             {
+                // Set eligibility
                 eligible = true;
-                currentVehicle = nearbyVehicle;
+
+                // Update UI on screen
                 container.Enabled = true;
                 container.Items.Clear();
-                if (nearbyVehicle.LockStatus == VehicleLockStatus.Locked) displayText("Press L to Unlock Car");
+                if (nearby.LockStatus == VehicleLockStatus.Locked) displayText("Press L to Unlock Car");
                 else displayText("Press L to Lock Car");
+
+                // Manage vehicles
+                vehicleManager(nearby);
                 return;
             }
             else
@@ -69,20 +76,41 @@ namespace Car_Lock_System
 
         private void locker()
         {
-            switch (currentVehicle.LockStatus)
+            switch (current.LockStatus)
             {
                 case VehicleLockStatus.Locked:
-                    currentVehicle.LockStatus = VehicleLockStatus.Unlocked;
-                    currentVehicle.IsAlarmSet = false;
+                    current.LockStatus = VehicleLockStatus.Unlocked;
+                    current.IsAlarmSet = false;
+                    Logger.Log("Unlocked Current Car");
                     break;
                 case VehicleLockStatus.Unlocked:
-                    currentVehicle.LockStatus = VehicleLockStatus.Locked;
-                    currentVehicle.IsAlarmSet = true;
+                    current.LockStatus = VehicleLockStatus.Locked;
+                    current.IsAlarmSet = true;
+                    Logger.Log("Locked Current Car");
                     break;
                 default:
-                    currentVehicle.LockStatus = VehicleLockStatus.Unlocked;
-                    currentVehicle.IsAlarmSet = false;
+                    current.LockStatus = VehicleLockStatus.Unlocked;
+                    current.IsAlarmSet = false;
+                    Logger.Log("Unlocked Current Car when Status wasn't Locked or Unlocked");
                     break;
+            }
+        }
+
+        private void vehicleManager(Vehicle nearby)
+        {
+            current = nearby;
+            if (previous == null)
+            {
+                previous = current;
+                Logger.Log("Previous car has been set to current");
+            }
+
+            if (!previous.Equals(current))
+            {
+                previous.LockStatus = VehicleLockStatus.Unlocked;
+                previous.IsAlarmSet = false;
+                Logger.Log("Unlocked Previous Car");
+                previous = current;
             }
         }
 
