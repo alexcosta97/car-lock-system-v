@@ -105,7 +105,7 @@ namespace Car_Lock_System
                 Logger.Log("Previous car has been set to current");
             }
 
-            if (!previous.Equals(current))
+            if (!previous.Equals(current) && previous.Exists())
             {
                 previous.LockStatus = VehicleLockStatus.Unlocked;
                 previous.IsAlarmSet = false;
