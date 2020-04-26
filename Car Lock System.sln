@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Car Lock System", "Car Lock System\Car Lock System.csproj", "{836005E5-CBB2-4B8A-A9C8-5F5C9F73BAC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTest", "DBTest\DBTest.csproj", "{D8FC4B28-454D-48B5-8F47-5B17A55FB5E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{836005E5-CBB2-4B8A-A9C8-5F5C9F73BAC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{836005E5-CBB2-4B8A-A9C8-5F5C9F73BAC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{836005E5-CBB2-4B8A-A9C8-5F5C9F73BAC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{836005E5-CBB2-4B8A-A9C8-5F5C9F73BAC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8FC4B28-454D-48B5-8F47-5B17A55FB5E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8FC4B28-454D-48B5-8F47-5B17A55FB5E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8FC4B28-454D-48B5-8F47-5B17A55FB5E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8FC4B28-454D-48B5-8F47-5B17A55FB5E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63A9111C-F4A1-423D-99EE-6C40A089AB43}
+	EndGlobalSection
+EndGlobal
