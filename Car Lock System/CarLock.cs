@@ -17,56 +17,53 @@ namespace Car_Lock_System
         }
 
         private ContainerElement container;
-        private Vehicle nearbyCar;
         private Vehicle currentVehicle;
-        private bool locked = false;
+        private bool eligible = false;
         private Ped player = Game.Player.Character;
 
         private void OnTick(object sender, EventArgs e) {
-            nearbyCar = World.GetClosestVehicle(player.Position, 5.0f, new Model[0]);
-            manageVehicleState();
+            if (player.IsInVehicle() || player.IsGettingIntoVehicle)
+            {
+                eligible = false;
+                return;
+            }
+            else
+            {
+                Vehicle nearbyVehicle = World.GetClosestVehicle(player.Position, 5.0f, new Model[0]);
+                eligibilityChecker(nearbyVehicle);
+                return;
+            }
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e) { }
 
         private void OnKeyUp(object sender, KeyEventArgs e) {
 
-            if (container.Enabled == true)
+            if (e.KeyCode == Keys.L && eligible && currentVehicle != null)
             {
-                if (e.KeyCode == Keys.L)
-                {
-                    locker();
-                }
-                container.Items.Clear();
-                container.Enabled = false;
+                locker();
             }
+            container.Items.Clear();
+            container.Enabled = false;
         }
 
-        private void manageVehicleState()
+        private void eligibilityChecker(Vehicle nearbyVehicle)
         {
-            if (nearbyCar != null)
+            Vehicle lastVehicle = player.LastVehicle;
+            if (nearbyVehicle != null && lastVehicle != null && player.LastVehicle.Equals(nearbyVehicle))
             {
-                container.Items.Clear();
+                eligible = true;
+                currentVehicle = nearbyVehicle;
                 container.Enabled = true;
-                nearbyCar.DirtLevel = 0f;
-                if (player.IsTryingToEnterALockedVehicle)
-                {
-                    displayText("The car is locked. Press L to Unlock Car");
-                }
-                else if (player.IsInVehicle(nearbyCar) || player.IsGettingIntoVehicle)
-                {
-                    displayText("Player in CarLockVehicle");
-                }
-                else if (nearbyCar.LockStatus == VehicleLockStatus.Unlocked)
-                {
-                    displayText("Press L to Lock Car");
-                    locked = false;
-                }
-                else if (nearbyCar.LockStatus == VehicleLockStatus.Locked)
-                {
-                    displayText("Press L to Unlock Car");
-                    locked = true;
-                }
+                container.Items.Clear();
+                if (nearbyVehicle.LockStatus == VehicleLockStatus.Locked) displayText("Press L to Unlock Car");
+                else displayText("Press L to Lock Car");
+                return;
+            }
+            else
+            {
+                eligible = false;
+                return;
             }
         }
 
